@@ -1,0 +1,25 @@
+@font-face {
+    font-family: Futura;
+    src: url('/assets/fonts/Futura-Medium.ttf') format('truetype');
+}
+  
+@font-face {
+    font-family: FuturaICGDemi;
+    src: url('/assets/fonts/Futura-ICG-Demi.ttf') format('truetype');
+}
+  
+@font-face {
+    font-family: AndaleMono;
+    src: url('/assets/fonts/AndaleMono.ttf') format('truetype');
+}
+
+* {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+html, body, #root, .app {
+    display: flex;
+    width: 100%;
+    min-height: 100%;
+}
