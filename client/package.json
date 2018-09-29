@@ -8,6 +8,12 @@
     },
     "/identify": {
       "target": "http://localhost:3020"
+    },
+    "/login": {
+      "target": "http://localhost:3020"
+    },
+    "/register": {
+      "target": "http://localhost:3020"
     }
   },
   "scripts": {

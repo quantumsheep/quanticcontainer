@@ -1,3 +1,6 @@
+exports.isDev = process.env.NODE_ENV !== 'production';
+exports.isProd = !exports.isDev;
+
 /**
  * @param {string} str 
  */

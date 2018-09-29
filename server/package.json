@@ -10,6 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^3.0.1",
+    "body-parser": "^1.18.3",
+    "connect-busboy": "0.0.2",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",

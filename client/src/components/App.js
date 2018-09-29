@@ -2,33 +2,34 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 
-import File from './File';
+import Login from './Login';
 import FileList from './FileList';
 
 export default class App extends Component {
     state = {
-        files: [],
+        connected: false,
     }
 
-    componentDidMount() {
-        this.getFiles();
+    async componentDidMount() {
+        try {
+            const { data: connected } = await axios.get('/identify');
+            this.setState({ connected });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    getFiles = () => {
-        axios.get('/files')
-            .then(files => this.setState({ files }))
-            .catch(console.error);
-    }
+    onConnect = () => this.setState({ connected: true });
 
     render() {
-        return (
-            <Router className="app">
-                <FileList>
-                    {
-                        this.state.files.map(file => <File isDir={file.isDir} filename={file.name} />)
-                    }
-                </FileList>
-            </Router>
-        )
+        if (!this.state.connected) {
+            return <Login onConnect={this.onConnect} />
+        } else {
+            return (
+                <Router className="app">
+                    <FileList />
+                </Router>
+            )
+        }
     }
 }
