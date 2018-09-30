@@ -67,6 +67,5 @@ exports.register = async ({ session, body: user }, res) => {
  * @param {import('express').Response} res 
  */
 exports.identify = (req, res) => {
-    console.log(req.session)
     res.send(req.session.user || {});
 }

@@ -10,8 +10,10 @@ const getFileStruct = path => new Promise((resolve, reject) => {
     fs.stat(path, (err, stats) => {
         if (err) return reject(err);
 
+        const filename = path.split('/').pop();
+
         resolve({
-            name: file,
+            name: filename,
             isDir: stats.isDirectory(),
         });
     });
@@ -28,9 +30,25 @@ const getFiles = (username, path = '') => new Promise((resolve, reject) => {
         if (err) return reject(err);
 
         try {
-            const promisesFiles = files.map(async file => await getFileStruct(`${filepath}/${file}`));
+            const fileStructs = await Promise.all(files.map(file => getFileStruct(`${filepath}/${file}`)));
 
-            resolve(await Promise.all(promisesFiles));
+            const filelist = fileStructs.sort((a, b) => {
+                if (b.isDir) {
+                    if (!a.isDir) {
+                        return 1;
+                    }
+
+                    return a.name.localeCompare(b.name);
+                } else {
+                    if (a.isDir) {
+                        return -1;
+                    }
+
+                    return a.name.localeCompare(b.name);
+                }
+            });
+
+            resolve(filelist);
         } catch (e) {
             reject(e);
         }
@@ -42,14 +60,18 @@ const getFiles = (username, path = '') => new Promise((resolve, reject) => {
  * @param {import('express').Response} res 
  */
 exports.getUserFiles = async (req, res) => {
-    if(!req.session.connected) {
+    if (!req.session.connected) {
         res.status(403).send([]);
     }
 
-    const username = req.param('username', req.session.user.username);
-    const path = req.param('path', '');
+    const username = req.params.username || req.session.user.username;
+    const path = req.params.path || '';
 
-    const files = await getFiles(username, path);
+    try {
+        const files = await getFiles(username, path);
 
-    res.send(files);
+        res.send(files);
+    } catch (e) {
+        res.send([])
+    }
 }

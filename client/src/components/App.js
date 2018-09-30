@@ -18,16 +18,30 @@ export default class App extends Component {
     getUser = async () => {
         try {
             const { data: user } = await axios.get('/identify');
-            console.log(user);
+            
             if (user) {
                 this.setState({ user });
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 
     onConnect = () => this.getUser();
+
+    accountClick = async e => {
+        if (!this.state.user) {
+            return this.setState({ loginModal: true });
+        }
+        
+        try {
+            await axios.post('/logout');
+
+            this.setState({ user: {} });
+        } catch(e) {
+            console.error(e);
+        }
+    }
 
     render() {
         return (
@@ -42,7 +56,7 @@ export default class App extends Component {
                             </ul>
                             <ul>
                                 <li>
-                                    <span onClick={() => this.setState({ loginModal: true })}>{this.state.user.username ? `Diconnect (connected as ${this.state.user.username})` : "Login"}</span>
+                                    <span onClick={this.accountClick}>{this.state.user.username ? `Diconnect (connected as ${this.state.user.username})` : "Login"}</span>
                                 </li>
                             </ul>
                         </nav>
