@@ -14,6 +14,9 @@
     },
     "/register": {
       "target": "http://localhost:3020"
+    },
+    "/logout": {
+      "target": "http://localhost:3020"
     }
   },
   "scripts": {

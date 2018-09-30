@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import helpers from '../helpers';
+
 export default class Login extends Component {
   state = {
     email: '',
@@ -12,15 +14,12 @@ export default class Login extends Component {
   connect = async e => {
     e.preventDefault();
 
-    // eslint-disable-next-line
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     const credentials = {
       email: this.state.email,
       password: this.state.password,
     }
 
-    if (credentials.email && credentials.email.match(emailRegex) && credentials.password) {
+    if (credentials.email && helpers.isEmail(credentials.email) && credentials.password) {
       try {
         const { data: connected } = await axios.post('/login', credentials);
 
@@ -42,8 +41,35 @@ export default class Login extends Component {
     }
   }
 
-  signup = e => {
+  signup = async e => {
     e.preventDefault();
+
+    const user = {
+      email: this.state.email,
+      username: this.state.username,
+      password: this.state.password,
+    }
+
+    if (user.email && helpers.isEmail(user.email) && user.username && helpers.isValidUsername(user.username) && user.password) {
+      try {
+        const { data: connected } = await axios.post('/register', user);
+
+        console.log(connected);
+
+        if (connected) {
+          if (this.props.onConnect) {
+            this.props.onConnect();
+          }
+
+          return;
+        }
+
+        this.invalidCredentials();
+      } catch (e) {
+        console.log(e);
+        this.invalidCredentials();
+      }
+    }
   }
 
   switch = e => {

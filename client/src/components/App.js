@@ -7,27 +7,27 @@ import FileList from './FileList';
 
 export default class App extends Component {
     state = {
-        account: {},
+        user: {},
         loginModal: false,
     }
 
     componentDidMount() {
-        this.getAccount();
+        this.getUser();
     }
 
-    getAccount = async () => {
+    getUser = async () => {
         try {
-            const { data: account } = await axios.get('/identify');
-
-            if (account) {
-                this.setState({ account });
+            const { data: user } = await axios.get('/identify');
+            console.log(user);
+            if (user) {
+                this.setState({ user });
             }
         } catch (e) {
             console.log(e);
         }
     }
 
-    onConnect = () => this.getAccount();
+    onConnect = () => this.getUser();
 
     render() {
         return (
@@ -42,7 +42,7 @@ export default class App extends Component {
                             </ul>
                             <ul>
                                 <li>
-                                    <span onClick={() => this.setState({ loginModal: true })}>{this.state.account.username ? "Disconnect" : "Login"}</span>
+                                    <span onClick={() => this.setState({ loginModal: true })}>{this.state.user.username ? `Diconnect (connected as ${this.state.user.username})` : "Login"}</span>
                                 </li>
                             </ul>
                         </nav>

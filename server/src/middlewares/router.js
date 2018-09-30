@@ -6,10 +6,11 @@ const controllers = {
 }
 
 router.post('/login', controllers.users.login);
+router.post('/register', controllers.users.register);
+router.get('/logout', controllers.users.identify);
+
+router.get('/identify', controllers.users.identify);
 
 router.get('/files/*', controllers.files.getUserFiles);
-
-// Special routes
-router.get('/identify', (req, res) => res.send(req.session.user || {}));
 
 module.exports = router;
