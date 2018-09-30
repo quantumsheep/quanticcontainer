@@ -2,34 +2,55 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 
-import Login from './Login';
+import LoginModal from './LoginModal';
 import FileList from './FileList';
 
 export default class App extends Component {
     state = {
-        connected: false,
+        account: {},
+        loginModal: false,
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.getAccount();
+    }
+
+    getAccount = async () => {
         try {
-            const { data: connected } = await axios.get('/identify');
-            this.setState({ connected });
+            const { data: account } = await axios.get('/identify');
+
+            if (account) {
+                this.setState({ account });
+            }
         } catch (e) {
             console.log(e);
         }
     }
 
-    onConnect = () => this.setState({ connected: true });
+    onConnect = () => this.getAccount();
 
     render() {
-        if (!this.state.connected) {
-            return <Login onConnect={this.onConnect} />
-        } else {
-            return (
-                <Router className="app">
+        return (
+            <Router>
+                <div className="app">
+                    <header>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a>My files</a>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <span onClick={() => this.setState({ loginModal: true })}>{this.state.account.username ? "Disconnect" : "Login"}</span>
+                                </li>
+                            </ul>
+                        </nav>
+                    </header>
                     <FileList />
-                </Router>
-            )
-        }
+                    <LoginModal open={this.state.loginModal} onConnect={this.onConnect} onClose={() => this.setState({ loginModal: false })} />
+                </div>
+            </Router>
+        );
     }
 }

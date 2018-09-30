@@ -10,6 +10,6 @@ router.post('/login', controllers.users.login);
 router.get('/files/*', controllers.files.getUserFiles);
 
 // Special routes
-router.get('/identify', (req, res) => res.send(req.session.connected === true));
+router.get('/identify', (req, res) => res.send(req.session.user || {}));
 
 module.exports = router;
