@@ -12,5 +12,6 @@ router.post('/logout', controllers.users.identify);
 router.get('/identify', controllers.users.identify);
 
 router.get('/files/*', controllers.files.getUserFiles);
+router.put('/files/:username/*', controllers.files.putFile);
 
 module.exports = router;

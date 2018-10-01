@@ -52,14 +52,10 @@ export default class Login extends Component {
 
     if (user.email && helpers.isEmail(user.email) && user.username && helpers.isValidUsername(user.username) && user.password) {
       try {
-        const { data: connected } = await axios.post('/register', user);
+        const { data: done } = await axios.post('/register', user);
 
-        console.log(connected);
-
-        if (connected) {
-          if (this.props.onConnect) {
-            this.props.onConnect();
-          }
+        if (done) {
+          this.switch();
 
           return;
         }

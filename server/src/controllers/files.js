@@ -37,15 +37,11 @@ const getFiles = (username, path = '') => new Promise((resolve, reject) => {
                     if (!a.isDir) {
                         return 1;
                     }
-
-                    return a.name.localeCompare(b.name);
-                } else {
-                    if (a.isDir) {
-                        return -1;
-                    }
-
-                    return a.name.localeCompare(b.name);
+                } else if (a.isDir) {
+                    return -1;
                 }
+                
+                return a.name.localeCompare(b.name);
             });
 
             resolve(filelist);
@@ -61,10 +57,10 @@ const getFiles = (username, path = '') => new Promise((resolve, reject) => {
  */
 exports.getUserFiles = async (req, res) => {
     if (!req.session.connected) {
-        res.status(403).send([]);
+        return res.status(403).send([]);
     }
 
-    const username = req.params.username || req.session.user.username;
+    const username = req.params && req.params.username ? req.params.username : req.session.user.username;
     const path = req.params.path || '';
 
     try {
@@ -74,4 +70,33 @@ exports.getUserFiles = async (req, res) => {
     } catch (e) {
         res.send([])
     }
+}
+
+
+/**
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+exports.putFile = async (req, res) => {
+    if (!req.session.connected || !req.busboy) {
+        return res.status(403).send([]);
+    }
+
+    req.busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
+
+        file.on('data', data => {
+            console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
+        });
+
+        file.on('end', () => {
+            console.log('File [' + fieldname + '] Finished');
+        });
+
+        file.on('error', err => {
+            console.log(err);
+        });
+    });
+
+    req.pipe(req.busboy);
 }
