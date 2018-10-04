@@ -7,6 +7,9 @@ export default class Breadcrumb extends Component {
 
         return (
             <span className="breadcrumb">
+                <span>
+                    <Link to="/">root</Link>
+                </span>
                 {
                     path.map((part, i) => {
                         console.log(path.slice(0, i).join('/') + `/${part}`)

@@ -33,10 +33,10 @@ export default class File extends Component {
 
             return (
                 <li className="file">
-                    <Link to={`${path}${path.endsWith('/') ? filename : `/${filename}`}`}>
+                    <a href={`/files${path}${path.endsWith('/') ? filename : `/${filename}`}`} download>
                         <img className="icon" src={`/icons/${extensions.includes(extension) ? extension : 'file'}.svg`} alt="" />
                         <span>{filename}</span>
-                    </Link>
+                    </a>
                 </li>
             )
         }

@@ -23,9 +23,7 @@ const getFileStruct = path => new Promise((resolve, reject) => {
  * @param {string} username 
  * @param {string} path 
  */
-const getFiles = (username = '', path = '') => new Promise((resolve, reject) => {
-    const filepath = `${filespath}/${username}/${path}`;
-
+const getFiles = filepath => new Promise((resolve, reject) => {
     fs.readdir(filepath, async (err, files) => {
         if (err) return reject(err);
 
@@ -55,7 +53,7 @@ const getFiles = (username = '', path = '') => new Promise((resolve, reject) => 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
-exports.getUserFiles = async (req, res) => {
+exports.getUserFiles = (req, res) => {
     if (!req.session.connected) {
         return res.status(403).send([]);
     }
@@ -64,12 +62,27 @@ exports.getUserFiles = async (req, res) => {
         req.params = {};
     }
 
-    const [ username, ...path ] = Object.values(req.params);
+    const [username, ...path] = Object.values(req.params);
 
     try {
-        const files = await getFiles(username, path.join('/'));
+        const filepath = `${filespath}/${username}/${path}`;
 
-        res.send(files);
+        fs.stat(filepath, async (err, stats) => {
+            if (err) return res.send([]);
+
+            if (stats.isDirectory()) {
+                const files = await getFiles(username, path.join('/'));
+
+                res.send(files);
+            } else {
+                fs.readFile(filepath, (err, data) => {
+                    if(err) res.send("");
+
+                    res.send(data);
+                });
+            }
+        });
+
     } catch (e) {
         res.send([])
     }
