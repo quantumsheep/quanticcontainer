@@ -79,6 +79,7 @@ export default class App extends Component {
                 <div className="app">
                     <input
                         type="file"
+                        multiple
                         className="hidden"
                         onChange={({ target: { files: [file] } }) => this.setState({ file })}
                         ref={ref => !this.state.fileInput ? this.setState({ fileInput: ref }) : null}
