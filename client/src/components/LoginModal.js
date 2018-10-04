@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import helpers from '../helpers';
 
-export default class Login extends Component {
+export default class LoginModal extends Component {
   state = {
     email: '',
     password: '',

@@ -17,6 +17,9 @@
     },
     "/logout": {
       "target": "http://localhost:3020"
+    },
+    "/tree": {
+      "target": "http://localhost:3020"
     }
   },
   "scripts": {

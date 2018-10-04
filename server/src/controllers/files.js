@@ -64,28 +64,28 @@ exports.getUserFiles = (req, res) => {
 
     const [username, ...path] = Object.values(req.params);
 
-    try {
-        const filepath = `${filespath}/${username}/${path}`;
+    const filepath = `${filespath}/${username}/${path}`;
 
-        fs.stat(filepath, async (err, stats) => {
-            if (err) return res.send([]);
+    fs.stat(filepath, async (err, stats) => {
+        if (err) return res.send([]);
 
-            if (stats.isDirectory()) {
+        if (stats.isDirectory()) {
+
+            try {
                 const files = await getFiles(username, path.join('/'));
 
                 res.send(files);
-            } else {
-                fs.readFile(filepath, (err, data) => {
-                    if(err) res.send("");
-
-                    res.send(data);
-                });
+            } catch (e) {
+                res.send([])
             }
-        });
+        } else {
+            fs.readFile(filepath, (err, data) => {
+                if (err) res.send("");
 
-    } catch (e) {
-        res.send([])
-    }
+                res.send(data);
+            });
+        }
+    });
 }
 
 

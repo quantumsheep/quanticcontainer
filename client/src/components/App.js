@@ -3,6 +3,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 
 import LoginModal from './LoginModal';
+import UploadModal from './UploadModal';
+
 import FileList from './FileList';
 import Breadcrumb from './Breadcrumb';
 
@@ -10,10 +12,11 @@ export default class App extends Component {
     state = {
         user: {},
         loginModal: false,
+        uploadModal: false,
         /** @type {HTMLInputElement} */
         fileInput: null,
-        /** @type {File} */
-        file: null,
+        /** @type {Filelist} */
+        files: [],
         path: '',
     }
 
@@ -55,24 +58,11 @@ export default class App extends Component {
         }
     }
 
-    upload = () => {
-        const data = new FormData();
-        data.append('foo', 'bar');
-        data.append('file', document.getElementById('file').files[0]);
-        var config = {
-            onUploadProgress: ({ loaded, total }) => {
-                const percentCompleted = Math.round((loaded * 100) / total);
-
-                console.log(percentCompleted);
-            }
-        };
-        axios.put(`/files/${this.state.user.username}/`, data, config)
-            .then(res => {
-                console.log('Done.')
-            })
-            .catch(err => {
-                console.log(err)
-            });
+    onFiles = e => {
+        this.setState({ 
+            files: e.target.files,
+            uploadModal: true,
+        });
     }
 
     render() {
@@ -83,7 +73,7 @@ export default class App extends Component {
                         type="file"
                         multiple
                         className="hidden"
-                        onChange={({ target: { files: [file] } }) => this.setState({ file })}
+                        onChange={this.onFiles}
                         ref={ref => !this.state.fileInput ? this.setState({ fileInput: ref }) : null}
                     />
                     <header>
@@ -108,6 +98,7 @@ export default class App extends Component {
                     </header>
                     <FileList />
                     <LoginModal open={this.state.loginModal} onConnect={this.onConnect} onClose={() => this.setState({ loginModal: false })} />
+                    <UploadModal open={this.state.uploadModal} files={this.state.files} onClose={() => this.setState({ uploadModal: false })} />
                 </div>
             </Router>
         );
