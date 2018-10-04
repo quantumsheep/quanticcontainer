@@ -30,6 +30,10 @@ export default class Login extends Component {
             this.props.onConnect();
           }
 
+          if(this.props.onClose) {
+            this.props.onClose();
+          }
+
           return;
         }
 
