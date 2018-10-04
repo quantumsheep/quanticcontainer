@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import LoginModal from './LoginModal';
 import FileList from './FileList';
+import Breadcrumb from './Breadcrumb';
 
 export default class App extends Component {
     state = {
@@ -13,6 +14,7 @@ export default class App extends Component {
         fileInput: null,
         /** @type {File} */
         file: null,
+        path: '',
     }
 
     componentDidMount() {
@@ -89,6 +91,9 @@ export default class App extends Component {
                             <ul>
                                 <li>
                                     <a>My files</a>
+                                </li>
+                                <li className="nohover">
+                                    <Breadcrumb />
                                 </li>
                             </ul>
                             <ul>

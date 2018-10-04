@@ -23,7 +23,7 @@ const getFileStruct = path => new Promise((resolve, reject) => {
  * @param {string} username 
  * @param {string} path 
  */
-const getFiles = (username, path = '') => new Promise((resolve, reject) => {
+const getFiles = (username = '', path = '') => new Promise((resolve, reject) => {
     const filepath = `${filespath}/${username}/${path}`;
 
     fs.readdir(filepath, async (err, files) => {
@@ -40,7 +40,7 @@ const getFiles = (username, path = '') => new Promise((resolve, reject) => {
                 } else if (a.isDir) {
                     return -1;
                 }
-                
+
                 return a.name.localeCompare(b.name);
             });
 
@@ -60,11 +60,14 @@ exports.getUserFiles = async (req, res) => {
         return res.status(403).send([]);
     }
 
-    const username = req.params && req.params.username ? req.params.username : req.session.user.username;
-    const path = req.params.path || '';
+    if (!req.params) {
+        req.params = {};
+    }
+
+    const [ username, ...path ] = Object.values(req.params);
 
     try {
-        const files = await getFiles(username, path);
+        const files = await getFiles(username, path.join('/'));
 
         res.send(files);
     } catch (e) {

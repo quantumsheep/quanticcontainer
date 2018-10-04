@@ -10,21 +10,21 @@ export default class FileList extends Component {
     }
 
     componentDidMount() {
-        this.getFiles();
+        this.getFiles(window.location.pathname);
         this.setPath();
     }
 
     componentDidUpdate() {
         if (this.state.path !== window.location.pathname) {
-            this.getFiles();
+            this.getFiles(window.location.pathname);
             this.setPath();
         }
     }
 
     setPath = () => this.setState({ path: window.location.pathname });
 
-    getFiles = () => {
-        axios.get(`/files${this.state.path}`)
+    getFiles = (path) => {
+        axios.get(`/files${path || this.state.path}`)
             .then(({ data }) => this.setState({ files: data || [] }))
             .catch(console.error);
     }
@@ -33,7 +33,7 @@ export default class FileList extends Component {
         return (
             <ul className="filelist">
                 {
-                    this.state.files.map((file, i) => <File key={i} isDir={file.isDir} filename={file.name} />)
+                    this.state.files.map((file, i) => <File key={i} isDir={file.isDir} path={this.state.path} filename={file.name} />)
                 }
             </ul>
         );

@@ -12,12 +12,12 @@ const extensions = [
 
 export default class File extends Component {
     render() {
-        const { isDir, filename = '' } = this.props;
+        const { isDir, path = '', filename = '' } = this.props;
 
         if (isDir) {
             return (
                 <li className="file">
-                    <Link to={`/${filename}`}>
+                    <Link to={`${path}${path.endsWith('/') ? filename : `/${filename}`}`}>
                         <img className="icon" src="/icons/dir.svg" alt="" />
                         <span>{filename}</span>
                     </Link>
@@ -33,7 +33,7 @@ export default class File extends Component {
 
             return (
                 <li className="file">
-                    <Link to={`/${filename}`}>
+                    <Link to={`${path}${path.endsWith('/') ? filename : `/${filename}`}`}>
                         <img className="icon" src={`/icons/${extensions.includes(extension) ? extension : 'file'}.svg`} alt="" />
                         <span>{filename}</span>
                     </Link>
