@@ -14,4 +14,6 @@ router.get('/identify', controllers.users.identify);
 router.get('/files/*', controllers.files.getUserFiles);
 router.put('/files/:username/*', controllers.files.putFile);
 
+router.get('/tree', controllers.files.tree);
+
 module.exports = router;

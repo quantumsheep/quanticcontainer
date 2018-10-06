@@ -65,7 +65,7 @@ h2 {
     margin-top: .2em;
 }
 
-input {
+input, select {
     width: 100%;
     border: 0;
     background: #fcfcfc;
@@ -217,4 +217,50 @@ nav ul li > span {
     color: #000;
     text-decoration: none;
     outline: none;
+}
+
+
+/**
+| Upload Modal
+*/
+.upload-modal {
+    width: 800px;
+}
+
+.upload-file {
+    position: relative;
+    display: inline-block;
+    min-width: 100px;
+    width: 10%;
+    margin: 10px;
+    padding: 8px;
+    border: solid 3px transparent;
+    border-radius: 5px;
+    transition: all .2s;
+}
+
+.upload-file:hover {
+    border-color: rgb(138, 138, 255);
+}
+
+.upload-file input[type="checkbox"] {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    width: auto;
+    pointer-events: none;
+}
+
+.upload-thumbnail {
+    width: 100%;
+    padding-top: 100%;
+    background-image: url('/icons/file.svg');
+    background-size: contain;
+}
+
+.upload-filename {
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
